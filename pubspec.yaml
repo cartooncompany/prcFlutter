@@ -59,10 +59,10 @@ flutter:
   uses-material-design: true
 
   assets:
-    - asset/img/misc
-    - asset/img/food
-    - asset/img/logo
-    - asset/svg/icon
+    - asset/img/misc/
+    - asset/img/food/
+    - asset/svg/icon/
+    - asset/img/logo/
     - asset/rive/
 
   fonts:
