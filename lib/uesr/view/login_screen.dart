@@ -27,11 +27,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     final dio = Dio();
 
-    const emulaterIP = "10.0.2.2:3000";
-    const simulatorIP = "127.0.0.1:3000";
-
-    final ip = Platform.isIOS ? simulatorIP : emulaterIP;
-
     return DefaultLayout(
       child: SingleChildScrollView(
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
@@ -107,20 +102,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextButton(
-                  onPressed: () async {
-                    final refreshToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3RAY29kZWZhY3RvcnkuYWkiLCJzdWIiOiJmNTViMzJkMi00ZDY4LTRjMWUtYTNjYS1kYTlkN2QwZDkyZTUiLCJ0eXBlIjoicmVmcmVzaCIsImlhdCI6MTczNDM5NzkwMSwiZXhwIjoxNzM0NDg0MzAxfQ.754DYKjNKeK-klj2JpmAiIOTiqqUxetR01exbwRcLpw";
-
-                    final resp = await dio.post(
-                      "http://$ip/auth/token",
-                      options: Options(
-                        headers: {
-                          'authorization': 'Bearer $refreshToken',
-                        },
-                      ),
-                    );
-
-                    print(resp.data);
-                  },
+                  onPressed: () async {},
                   child: const Text(
                     'token refresh',
                     style: TextStyle(color: Colors.black),
