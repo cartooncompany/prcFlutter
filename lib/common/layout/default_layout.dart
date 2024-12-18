@@ -38,6 +38,7 @@ class DefaultLayout extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
+        foregroundColor: Colors.black,
       );
     }
   }
