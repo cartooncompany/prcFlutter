@@ -3,7 +3,9 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:untitled/common/const/colors.dart';
+import 'package:untitled/common/const/data.dart';
 import 'package:untitled/common/layout/default_layout.dart';
 import 'package:untitled/common/view/root_tab.dart';
 
@@ -22,6 +24,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
     final dio = Dio();
 
     const emulaterIP = "10.0.2.2:3000";
@@ -85,10 +88,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     );
 
+                    final refreshToken = resp.data['refreshToken'];
+                    final accessToken = resp.data['accessToken'];
+
+                    await storage.write(key: REFRESH_TOKEN_KEY, value: refreshToken);
+                    await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
+
                     Navigator.of(context).push(
                       MaterialPageRoute(builder: (_) => const RootTab()),
                     );
-                    print(resp.data);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: PRIMARY_COLOR,
