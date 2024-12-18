@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:untitled/restaurant/component/restaurant_card.dart';
+import 'package:untitled/restaurant/model/restaurant_model.dart';
 
 import '../../common/const/data.dart';
 
@@ -42,23 +43,38 @@ class RestaurantScreen extends StatelessWidget {
                   itemCount: snapshot.data!.length,
                   itemBuilder: (_, index) {
                     final item = snapshot.data![index];
-
-                    return RestaurantCard(
-                      img: Image.network(
-                        'http://$ip${item['thumbUrl']}',
-                        fit: BoxFit.cover,
-                      ),
+                    final pItem = RestaurantModel(
+                      id: item['id'],
                       name: item['name'],
+                      thumbUrl: 'http://$ip${item['thumbUrl']}',
                       tags: List<String>.from(item['tags']),
+                      priceRange: RestaurantPriceRange.values.firstWhere(
+                          (e) => e.name == item['priceRange'],
+                      ),
+                      ratings: item['ratings'],
                       ratingsCount: item['ratingsCount'],
                       deliveryTime: item['deliveryTime'],
                       deliveryFee: item['deliveryFee'],
-                      ratings: item['ratings'],
                     );
 
-                  }, separatorBuilder: (_, int index) {
-                    return const SizedBox(height: 16.0,);
-                },
+                    return RestaurantCard(
+                      img: Image.network(
+                        pItem.thumbUrl,
+                        fit: BoxFit.cover,
+                      ),
+                      name: pItem.name,
+                      tags: pItem.tags,
+                      ratingsCount: pItem.ratingsCount,
+                      deliveryTime: pItem.deliveryTime,
+                      deliveryFee: pItem.deliveryFee,
+                      ratings: pItem.ratings,
+                    );
+                  },
+                  separatorBuilder: (_, int index) {
+                    return const SizedBox(
+                      height: 16.0,
+                    );
+                  },
                 );
               }
             },
