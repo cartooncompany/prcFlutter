@@ -4,7 +4,7 @@ import '../../common/const/data.dart';
 
 class RestaurantDetailModel extends RestaurantModel {
   final String detail;
-  final List<RestaurantProduct> products;
+  final List<RestaurantProductModel> products;
 
   RestaurantDetailModel({
     required super.id,
@@ -34,31 +34,40 @@ class RestaurantDetailModel extends RestaurantModel {
       deliveryTime: json['deliveryTime'],
       deliveryFee: json['deliveryFee'],
       detail: json['detail'],
-      products: json['products'].map<RestaurantProduct>(
-        (e) => RestaurantProduct(
-          id: e['id'],
-          name: e['name'],
-          imgUrl: e['imgUrl'],
-          detail: e['detail'],
-          price: e['price'],
-        ),
-      ).toList(),
+      products: json['products']
+          .map<RestaurantProductModel>(
+            (e) => RestaurantProductModel.fromJson(
+              json: e,
+            ),
+          )
+          .toList(),
     );
   }
 }
 
-class RestaurantProduct {
+class RestaurantProductModel {
   final String id;
   final String name;
   final String imgUrl;
   final String detail;
   final int price;
 
-  RestaurantProduct({
+  RestaurantProductModel({
     required this.id,
     required this.name,
     required this.imgUrl,
     required this.detail,
     required this.price,
   });
+
+  factory RestaurantProductModel.fromJson(
+      {required Map<String, dynamic> json}) {
+    return RestaurantProductModel(
+      id: json['id'],
+      name: json['name'],
+      imgUrl: 'http://$ip${json['imgUrl']}',
+      detail: json['detail'],
+      price: json['price'],
+    );
+  }
 }
