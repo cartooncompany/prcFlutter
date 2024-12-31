@@ -30,45 +30,45 @@ class RestaurantScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: FutureBuilder<List>(
-            future: paginateRestaurant(),
-            builder: (context, AsyncSnapshot<List> snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return ListView.separated(
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (_, index) {
-                    final item = snapshot.data![index];
-                    final pItem = RestaurantModel.fromJson(
-                      json: item,
-                    );
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: FutureBuilder<List>(
+          future: paginateRestaurant(),
+          builder: (context, AsyncSnapshot<List> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return ListView.separated(
+                itemCount: snapshot.data!.length,
+                itemBuilder: (_, index) {
+                  final item = snapshot.data![index];
+                  final pItem = RestaurantModel.fromJson(
+                    json: item,
+                  );
 
-                    return GestureDetector(
-                        onTap: () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (_) => const RestaurantDetailScreen(),
+                  return GestureDetector(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (_) => RestaurantDetailScreen(
+                              id: pItem.id,
                             ),
-                          );
-                        },
-                        child: RestaurantCard.fromModel(model: pItem));
-                  },
-                  separatorBuilder: (_, int index) {
-                    return const SizedBox(
-                      height: 16.0,
-                    );
-                  },
-                );
-              }
-            },
-          ),
+                          ),
+                        );
+                      },
+                      child: RestaurantCard.fromModel(model: pItem));
+                },
+                separatorBuilder: (_, int index) {
+                  return const SizedBox(
+                    height: 16.0,
+                  );
+                },
+              );
+            }
+          },
         ),
       ),
     );
