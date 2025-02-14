@@ -12,9 +12,6 @@ class RestaurantDetailModel extends RestaurantModel {
   RestaurantDetailModel({
     required super.id,
     required super.name,
-    @JsonKey(
-      fromJson: DataUtils.pathToUrl,
-    )
     required super.thumbUrl,
     required super.tags,
     required super.priceRange,
