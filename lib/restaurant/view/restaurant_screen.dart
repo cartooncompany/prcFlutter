@@ -30,7 +30,6 @@ class RestaurantScreen extends ConsumerWidget {
                 itemCount: snapshot.data!.data.length,
                 itemBuilder: (_, index) {
                   final pItem = snapshot.data!.data[index];
-
                   return GestureDetector(
                       onTap: () {
                         Navigator.of(context).push(
