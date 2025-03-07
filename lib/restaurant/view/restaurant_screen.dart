@@ -1,12 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:untitled/common/dio/dio.dart';
-import 'package:untitled/common/model/cursor_pagination_model.dart';
 import 'package:untitled/restaurant/component/restaurant_card.dart';
-import 'package:untitled/restaurant/model/restaurant_model.dart';
 import 'package:untitled/restaurant/provider/restaurant_provider.dart';
-import 'package:untitled/restaurant/repository/restaurant_repository.dart';
 import 'package:untitled/restaurant/view/restaurant_detail_screen.dart';
 
 import '../../common/const/data.dart';
