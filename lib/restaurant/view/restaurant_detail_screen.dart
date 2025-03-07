@@ -17,22 +17,16 @@ class RestaurantDetailScreen extends ConsumerWidget {
     super.key,
   });
 
-  Future<RestaurantDetailModel> getRestaurantDetail(WidgetRef ref) async {
-    final dio = ref.watch(dioProvider);
-
-    final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/');
-
-    return repository.getRestaurantDetail(id: id);
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DefaultLayout(
       title: '불타는 떡볶이',
       child: FutureBuilder<RestaurantDetailModel>(
-        future: getRestaurantDetail(ref),
+        future: ref.watch(restaurantRepositoryProvider).getRestaurantDetail(
+          id: id,
+        ),
         builder: (_, AsyncSnapshot<RestaurantDetailModel> snapshot) {
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return Center(
               child: Text(snapshot.error.toString()),
             );
@@ -46,9 +40,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
           return CustomScrollView(
             slivers: [
-              renderTop(
-                model: snapshot.data!
-              ),
+              renderTop(model: snapshot.data!),
               renderLabel(),
               renderProducts(
                 products: snapshot.data!.products,
@@ -77,14 +69,14 @@ class RestaurantDetailScreen extends ConsumerWidget {
 
   SliverPadding renderProducts({
     required List<RestaurantProductModel> products,
-}) {
+  }) {
     return SliverPadding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       sliver: SliverList(
         delegate: SliverChildBuilderDelegate(
           (context, index) {
             final model = products[index];
-            return  Padding(
+            return Padding(
               padding: const EdgeInsets.only(top: 16.0),
               child: ProductCard.fromModel(
                 model: model,
@@ -97,9 +89,7 @@ class RestaurantDetailScreen extends ConsumerWidget {
     );
   }
 
-  SliverToBoxAdapter renderTop({
-    required RestaurantDetailModel model
-}) {
+  SliverToBoxAdapter renderTop({required RestaurantDetailModel model}) {
     return SliverToBoxAdapter(
       child: RestaurantCard.fromModel(
         model: model,
