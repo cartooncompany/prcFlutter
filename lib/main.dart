@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/common/component/custom_text_form_field.dart';
 import 'package:untitled/common/view/splash_screen.dart';
 import 'package:untitled/uesr/view/login_screen.dart';
 
 void main() {
-  runApp(const _App());
+  runApp(
+    ProviderScope(
+      child: _App(),
+    ),
+  );
 }
 
 class _App extends StatelessWidget {
