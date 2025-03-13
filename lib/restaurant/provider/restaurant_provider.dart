@@ -1,10 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:untitled/common/model/cursor_pagination_model.dart';
-import 'package:untitled/restaurant/model/restaurant_model.dart';
 import 'package:untitled/restaurant/repository/restaurant_repository.dart';
 
 final restaurantProvider =
-    StateNotifierProvider<RestaurantStateNotifier, List<RestaurantModel>>(
+    StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
   (ref) {
     final repository = ref.watch(restaurantRepositoryProvider);
 
@@ -13,17 +12,32 @@ final restaurantProvider =
    },
 );
 
-class RestaurantStateNotifier extends StateNotifier<CursorPagination> {
+class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
   final RestaurantRepository repository;
 
   RestaurantStateNotifier({
     required this.repository,
-  }) : super(CursorPagination(meta: meta, data: data,)) {
+  }) : super(CursorPaginationLoading()) {
     paginate();
   }
 
-  paginate() async {
-    final resp = await repository.paginate();
-    state = resp.data;
+  paginate({
+    int fetchCount = 20,
+    //추가로 데이터 더 가져오기
+    //true - 추가로 더 가져옴
+    //false - 새로고침 (현재 상태를 덮어씌움)
+    bool fetchMore = false,
+    //강제로 다시 로딩하기
+    //true - CursorPaginationLoading()
+    bool forceRetch = false,
+}) async {
+    //5가지 가능성
+    //state의 상태
+    //[상태가]
+    //1) CursorPagination - 정상적으로 데이터가 있는 상태
+    //2) CursorPaginationLoading - 데이터가 로딩중인 상태 (현재 캐시 없음)
+    //3) CursorPaginationError - 에러가 있는 상태
+    //4) CursorPaginationRefetching - 첫번쨰 페이지부터 다시 데이터를 가져올떄
+    //5) CursorPaginationFetchMore - 추가 데이터를 paginate 해오라는 요청을 받았을 때
   }
 }

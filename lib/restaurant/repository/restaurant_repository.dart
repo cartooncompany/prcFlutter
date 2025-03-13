@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:untitled/common/dio/dio.dart';
 import 'package:untitled/common/model/cursor_pagination_model.dart';
+import 'package:untitled/restaurant/model/pagination_params.dart';
 import 'package:untitled/restaurant/model/restaurant_model.dart';
 
 import '../../common/const/data.dart';
@@ -10,28 +11,29 @@ import '../model/restaurant_detail_model.dart';
 
 part 'restaurant_repository.g.dart';
 
-final restaurantRepositoryProvider = Provider(
-    (ref) {
-      final dio = ref.watch(dioProvider);
+final restaurantRepositoryProvider = Provider((ref) {
+  final dio = ref.watch(dioProvider);
 
-      final repository = RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/');
+  final repository =
+      RestaurantRepository(dio, baseUrl: 'http://$ip/restaurant/');
 
-      return repository;
-    }
-);
+  return repository;
+});
 
 @RestApi()
 abstract class RestaurantRepository {
   // http://$ip/restaurant
   factory RestaurantRepository(Dio dio, {String baseUrl}) =
-  _RestaurantRepository;
+      _RestaurantRepository;
 
   // http://$ip/restaurant/
   @GET('/')
   @Headers({
     'accessToken': 'true',
   })
-  Future<CursorPagination<RestaurantModel>> paginate();
+  Future<CursorPagination<RestaurantModel>> paginate({
+    @Queries() PaginationParams? paginationParams = const PaginationParams(),
+  });
 
   // http://$ip/restaurant/:id
   @GET('/{id}')
