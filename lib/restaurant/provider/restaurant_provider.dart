@@ -4,6 +4,18 @@ import 'package:untitled/common/model/cursor_pagination_model.dart';
 import 'package:untitled/restaurant/model/pagination_params.dart';
 import 'package:untitled/restaurant/repository/restaurant_repository.dart';
 
+import '../model/restaurant_model.dart';
+
+final restaurantDetailProvider =
+    Provider.family<RestaurantModel?, String>((ref, id) {
+  final state = ref.watch(restaurantProvider);
+  if (state is! CursorPagination) {
+    return null;
+  }
+
+  return state.data.firstWhere((element) => element.id == id);
+});
+
 final restaurantProvider =
     StateNotifierProvider<RestaurantStateNotifier, CursorPaginationBase>(
   (ref) {
@@ -23,7 +35,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
     paginate();
   }
 
-  void paginate({
+  Future<void> paginate({
     int fetchCount = 20,
     //추가로 데이터 더 가져오기
     //true - 추가로 더 가져옴
@@ -85,7 +97,7 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
       } else {
         //만약 데이터가 있는 상황이라면
         //기존 데이터를 보존한채로 Fetch (API 요청)를 진행
-        if(state is CursorPagination && !forceRefetch){
+        if (state is CursorPagination && !forceRefetch) {
           final pState = state as CursorPagination;
 
           state = CursorPagination(
@@ -102,20 +114,44 @@ class RestaurantStateNotifier extends StateNotifier<CursorPaginationBase> {
         paginationParams: paginationParams,
       );
 
-      if(state is CursorPaginationFetchingMore){
+      if (state is CursorPaginationFetchingMore) {
         final pState = state as CursorPagination;
 
-        state = resp.copywith(
-            data: [
-              ...pState.data,
-              ...resp.data,
-            ]
-        );
+        state = resp.copywith(data: [
+          ...pState.data,
+          ...resp.data,
+        ]);
       } else {
         state = resp;
       }
-    } catch(e) {
+    } catch (e) {
       state = CursorPaginationError(message: '데이터를 불러오지 못했습니다.');
     }
+  }
+
+  getDetail({
+    required String id,
+  }) async {
+    // 만약에 데이터가 하나도 없는 상태라면(CursorPagination이 아니라면)
+
+    if (state is! CursorPagination) {
+      await this.paginate();
+    }
+
+    // state가 CursorPagination이 아닐때 그냥 리턴
+    if (state is! CursorPagination) {
+      return;
+    }
+
+    final pState = state as CursorPagination;
+    final resp = await repository.getRestaurantDetail(id: id);
+
+    state = pState.copywith(
+      data: pState.data
+          .map<RestaurantModel>(
+            (e) => e.id == id ? resp : e,
+          )
+          .toList(),
+    );
   }
 }
