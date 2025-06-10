@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:untitled/common/layout/default_layout.dart';
 import 'package:untitled/product/component/product_card.dart';
+import 'package:untitled/rating/component/rating_card.dart';
 import 'package:untitled/restaurant/component/restaurant_card.dart';
 import 'package:untitled/restaurant/model/restaurant_detail_model.dart';
 import 'package:untitled/restaurant/provider/restaurant_provider.dart';
@@ -49,12 +50,26 @@ class _RestaurantDetailScreenState
           renderTop(
             model: state,
           ),
-          if(state is! RestaurantDetailModel) renderLoading(),
+          if (state is! RestaurantDetailModel) renderLoading(),
           if (state is RestaurantDetailModel) renderLabel(),
           if (state is RestaurantDetailModel)
             renderProducts(
               products: state.products,
             ),
+          const SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 16.0),
+            sliver: SliverToBoxAdapter(
+              child: RatingCard(
+                rating: 5,
+                email: 'jc@codefactory.ai',
+                images: [],
+                avatarImage: AssetImage(
+                  'asset/img/logo/codefactory_logo.png'
+                ),
+                content: '맛있습니다.',
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -67,7 +82,7 @@ class _RestaurantDetailScreenState
         delegate: SliverChildListDelegate(
           List.generate(
             3,
-                (index) => Padding(
+            (index) => Padding(
               padding: const EdgeInsets.only(bottom: 32.0),
               child: Shimmer.fromColors(
                 baseColor: Colors.grey[300]!,
@@ -76,12 +91,14 @@ class _RestaurantDetailScreenState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(
                     5, // 5개 줄로 설정
-                        (lineIndex) => Padding(
+                    (lineIndex) => Padding(
                       padding: const EdgeInsets.only(bottom: 6.0),
                       child: Container(
                         width: lineIndex == 4
-                            ? MediaQuery.of(context).size.width * 0.6 // 마지막 줄은 짧게
-                            : MediaQuery.of(context).size.width * 0.9, // 나머지는 길게
+                            ? MediaQuery.of(context).size.width *
+                                0.6 // 마지막 줄은 짧게
+                            : MediaQuery.of(context).size.width *
+                                0.9, // 나머지는 길게
                         height: 16.0,
                         decoration: BoxDecoration(
                           color: Colors.white,
